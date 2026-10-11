@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+  <meta name="color-scheme" content="light dark">
+  <title>Draad</title>
+  <style>
+    :root { --bg: #fbf6ee; --surface: #ffffff; --text: #1f2430; --muted: #5b6070; --thread: #cf412d;
+      --shadow: 0 2px 12px rgba(92, 64, 30, 0.1); color-scheme: light; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #111722; --surface: #19212f; --text: #f4efe6; --muted: #aeb6c4; --thread: #ef6a55;
+        --shadow: 0 2px 12px rgba(0, 0, 0, 0.35); color-scheme: dark; }
+    }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--bg); color: var(--text);
+      font: 16px/1.6 system-ui, sans-serif; }
+    main { max-width: 26rem; padding: 2.5rem 2rem; margin: 1rem; background: var(--surface); border-radius: 1.25rem;
+      box-shadow: var(--shadow); text-align: center; }
+    .logo { font: 700 2rem/1 Georgia, serif; }
+    .logo::after { content: ""; display: block; width: 2.5rem; height: 3px; margin: 0.6rem auto 0; background: var(--thread); border-radius: 2px; }
+    h1 { font-size: 1.2rem; margin: 1.5rem 0 0.5rem; }
+    p { color: var(--muted); margin: 0 0 1.5rem; }
+    button { font: inherit; font-weight: 600; color: #fff; background: var(--thread); border: 0; border-radius: 999px;
+      padding: 0.7rem 1.6rem; cursor: pointer; box-shadow: var(--shadow); }
+    button:active { box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.25); }
+  </style>
+</head>
+<body>
+<main>
+  <div class="logo">Draad</div>
+  <h1 id="title">No connection</h1>
+  <p id="text">Draad can't load right now. It will try again by itself as soon as you're back online.</p>
+  <button id="retry" type="button">Try again</button>
+</main>
+<script>
+  // In the reader's language where Draad has it (the four the app ships first, in Draad's order), else English.
+  const texts = {
+    nl: ["Geen verbinding", "Draad kan nu niet laden. Zodra je weer online bent, probeert het vanzelf opnieuw.", "Opnieuw proberen"],
+    fr: ["Pas de connexion", "Draad ne peut pas se charger pour l'instant. Il réessaiera tout seul dès que vous serez de nouveau en ligne.", "Réessayer"],
+    de: ["Keine Verbindung", "Draad lässt sich gerade nicht laden. Sobald du wieder online bist, versucht Draad es von selbst erneut.", "Erneut versuchen"],
+  };
+  const own = texts[navigator.language.slice(0, 2)];
+  if (own) {
+    document.documentElement.lang = navigator.language.slice(0, 2);
+    [title.textContent, text.textContent, retry.textContent] = own;
+  }
+  const target = new URLSearchParams(location.search).get("retry") || "https://draad.app/";
+  const go = () => location.replace(target);
+  retry.addEventListener("click", go);
+  window.addEventListener("online", go);
+</script>
+</body>
+</html>

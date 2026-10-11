@@ -1,0 +1,77 @@
+{
+  "name": "draad-downloads",
+  "productName": "Draad",
+  "version": "0.2.0",
+  "description": "Draad, free Bible study, for Windows, macOS and Linux",
+  "author": "Neal Van de Velde (nealvdv)",
+  "main": "main.cjs",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "dist": "electron-builder --win --publish never",
+    "dist:mac": "electron-builder --mac --publish never",
+    "dist:linux": "electron-builder --linux --publish never"
+  },
+  "build": {
+    "appId": "be.nealvdv.draad",
+    "productName": "Draad",
+    "copyright": "Neal Van de Velde (nealvdv)",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "offline.html",
+      "icon.png"
+    ],
+    "icon": "icon.png",
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "Draad-Setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "Draad-portable.${ext}"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.reference",
+      "artifactName": "Draad.${ext}"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Education",
+      "artifactName": "Draad.${ext}"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "nealvdv",
+      "repo": "draad-downloads",
+      "releaseType": "release"
+    }
+  },
+  "devDependencies": {
+    "electron": "^44.5.1",
+    "electron-builder": "^26.15.3"
+  },
+  "allowScripts": {
+    "electron@44.5.1": true,
+    "electron-winstaller@5.4.0": true
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9"
+  },
+  "repository": "github:nealvdv/draad-downloads"
+}

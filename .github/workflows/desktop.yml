@@ -1,0 +1,42 @@
+# The desktop installers, built on GitHub's own machines (no Mac needed here) and attached to a release.
+# Start it with a tag:  git tag desktop-v0.2.0 && git push origin desktop-v0.2.0
+# draad.app links to releases/latest/download/<name>, so the names carry no version (package.json).
+name: Desktop installers
+
+on:
+  push:
+    tags: ["desktop-v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            target: --win
+          - os: macos-latest
+            target: --mac
+          - os: ubuntu-latest
+            target: --linux
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      # Unsigned for now: Windows SmartScreen and macOS Gatekeeper warn on first open until there are
+      # signing certificates (CSC_LINK / Apple ID secrets), which are Neal's to get.
+      - run: npx electron-builder ${{ matrix.target }} --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
