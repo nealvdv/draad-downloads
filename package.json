@@ -1,7 +1,7 @@
 {
   "name": "draad-downloads",
   "productName": "Draad",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Draad, free Bible study, for Windows, macOS and Linux",
   "author": "Neal Van de Velde (nealvdv)",
   "main": "main.cjs",
@@ -43,7 +43,12 @@
     },
     "mac": {
       "target": [
-        "dmg"
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        }
       ],
       "category": "public.app-category.reference",
       "artifactName": "Draad.${ext}"
